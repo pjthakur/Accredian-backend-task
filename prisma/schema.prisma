@@ -11,7 +11,7 @@ generator client {
 model Referral {
   id        Int     @id @default(autoincrement())
   referrerName    String
-  referrerEmail   String   @unique
+  referrerEmail   String   
   referrerPhone   String?
   referrerID      String?
   refereeName     String?
