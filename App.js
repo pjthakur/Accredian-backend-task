@@ -3,19 +3,19 @@ const { PrismaClient } = require('@prisma/client');
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 const helmet = require('helmet');
-const csrf = require('csurf');
+
 const rateLimit = require('express-rate-limit');
 
 const app = express();
 const prisma = new PrismaClient();
 
 app.use(express.json());
-app.use(helmet()); // Enable security headers
-app.use(csrf()); // Enable CSRF protection
-app.use(rateLimit({ // Enable rate limiting
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // 100 requests per 15 minutes
-  delayMs: 0, // no delay
+app.use(helmet()); 
+
+app.use(rateLimit({ 
+  windowMs: 15 * 60 * 1000, 
+  max: 100, 
+  delayMs: 0, 
 }));
 
 app.use((req, res, next) => {
@@ -24,7 +24,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Created Referral endpoint
+
 app.post('/referrals', async (req, res) => {
   try {
     const { referrerName,
@@ -54,7 +54,7 @@ app.post('/referrals', async (req, res) => {
   }
 });
 
-// Get Referrals endpoint
+
 app.get('/referrals', async (req, res) => {
   try {
     const referrals = await prisma.referral.findMany();
@@ -74,7 +74,7 @@ const oauth2Client = new google.auth.OAuth2(
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
-    secure: false, // or 'STARTTLS'
+    secure: false,
     auth: {
       type: 'OAuth2',
       user: process.env.EMAIL_USERNAME,
@@ -84,7 +84,7 @@ const oauth2Client = new google.auth.OAuth2(
     },
   });
   
-  // Send referral email
+
   async function sendReferralEmail(referral) {
     try {
       const mailOptions = {
@@ -109,14 +109,14 @@ const oauth2Client = new google.auth.OAuth2(
   
 
 
-// Error handling middleware
+
 app.use((error, req, res, next) => {
   console.error(error);
   res.status(500).json({ message: 'Internal Server Error' });
 });
 
-// Start server
-const port = 3000;
+
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });

@@ -1,6 +1,7 @@
+
 datasource db {
-  provider = "mysql"
-  url      = "mysql://root:1234@localhost:3306/referral"
+  provider  = "postgresql"
+  url  	    = env("DATABASE_URL")
 }
 
 generator client {
