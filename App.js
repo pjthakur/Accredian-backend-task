@@ -9,6 +9,7 @@ const rateLimit = require('express-rate-limit');
 const app = express();
 const prisma = new PrismaClient();
 
+const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(helmet()); 
 
@@ -54,7 +55,9 @@ app.post('/referrals', async (req, res) => {
   }
 });
 
-
+app.get('/',(req,res)=>{
+  res.send('hello from the home page')
+})
 app.get('/referrals', async (req, res) => {
   try {
     const referrals = await prisma.referral.findMany();
@@ -116,7 +119,6 @@ app.use((error, req, res, next) => {
 });
 
 
-const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
